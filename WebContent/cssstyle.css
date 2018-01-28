@@ -1,17 +1,24 @@
+html{
+	display: table;
+	margin: auto;
+}
 body{
-	background-image:url();
+	display: table-cell;
+	vertical-align: middle;
 }
-ul{
-	margin: 0px;
-	padding: 0px;
+#navbar ul{
+	display: table;
+	margin: 0 auto;
+	padding: 0;
 	list-style-type: none;
+	vertical-align: middle;
 }
-ul li a{
+#navbar ul li a{
 	text-decoration: none;
 	color: white;
 	display: block;
 }
-ul li{
+#navbar ul li{
 	float: left;
 	width: 150px;
 	height: 40px;
@@ -21,9 +28,6 @@ ul li{
 	text-align: center;
 	border: 1px solid white;
 }
-ul li a:hover{
+#navbar ul li a:hover{
 	background-color: blue;
-}
-ul li a.active-page{
-	background-color: black;
 }

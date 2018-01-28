@@ -4,19 +4,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Alaska Foreign Exchange Student Portal</title>
 		<link href="cssstyle.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
-		<h1>Alaska Foreign Exchange Student Portal</h1>
-		<div>
-			<ul>
-				<li><a href="index.jsp">Home</a></li>
-				<li><a href="eventCalendar.jsp">Event Calendar</a></li>
-				<li><a href="#" class='active-page'>Contact Us</a></li>
-				<li><a href="login.jsp">Log-in</a></li>
-			</ul>
-		</div>
+		<%@ include file="header.jsp" %>
 		<br/>
 		<h2>Contact Us</h2>
 	</body>

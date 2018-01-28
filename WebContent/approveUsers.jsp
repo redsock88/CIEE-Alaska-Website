@@ -8,6 +8,6 @@
 	<body>
 		<%@ include file="header.jsp" %>
 		<br/>
-		<h2>Calendar</h2>
+		<h2>Approve New Users</h2>
 	</body>
 </html>

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import database.DBConnection;
+import person.Person;
+import student.Student;
 import user.Users;
 
 /**
@@ -40,18 +42,74 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		Users user = new Users();
-		Boolean ind = user.checkLogin(username, password);
-		if(ind) {
-			response.sendRedirect("index.jsp");
+		String requestName = request.getParameter("submit");
+		if(requestName.equalsIgnoreCase("Login")) {
+			String username = request.getParameter("username");
+			String password = request.getParameter("password");
+			Users user = new Users();
+			user = user.checkLoginAndGetUser(username, password);
+			if(user != null && user.status.equalsIgnoreCase("active")) {
+				request.setAttribute("userID", user.userID);
+				RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+				rd.forward(request, response);
+			}else {
+				if(user != null && !user.status.equalsIgnoreCase("active")) {
+					request.setAttribute("errorMessage", "Your account has been deactivated.");
+					RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+					rd.forward(request, response);
+				}else{
+					request.setAttribute("errorMessage", "Invalid username or password.");
+					RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+					rd.forward(request, response);
+				}
+			}
 		}else {
-			request.setAttribute("errorMessage", "Invalid username or password.");
-			RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
-			rd.forward(request, response);
+			String username = request.getParameter("username");
+			Users user = new Users();
+			boolean ind = user.checkUsername(username);
+			if(!ind) {
+				String userType = request.getParameter("userType");
+				String firstName = request.getParameter("firstName");
+				String lastName = request.getParameter("lastName");
+				String password = request.getParameter("password");
+				Person person = new Person();
+				person.firstName = firstName;
+				person.lastName = lastName;
+				if(userType.equalsIgnoreCase("host_family")) {
+					String phone = request.getParameter("phone");
+					String address = request.getParameter("address");
+					person.phone = phone;
+					person.address = address;
+				}
+				long personID = person.insertPerson(person);
+				if(userType.equalsIgnoreCase("student")) {
+					String country = request.getParameter("country");
+					Student student = new Student();
+					student.personID = personID;
+					student.countryOfOrigin = country;
+					student.insertStudent(student);
+				}
+				if(userType.equalsIgnoreCase("student_family")) {
+					String childFirstName = request.getParameter("childFirstName");
+					String childLastName = request.getParameter("childLastName");
+					Person child = new Person();
+					child = child.searchByName(childFirstName, childLastName);
+					Student student = new Student();
+					student.setParentID(child.personID, personID);
+				}
+				user.personID = personID;
+				user.type = userType;
+				user.password = password;
+				user.insertUser(user);
+				request.setAttribute("userID", user.userID);
+				RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+				rd.forward(request, response);
+			}else {
+				request.setAttribute("errorMessage", "This email is already in use.");
+				RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+				rd.forward(request, response);
+			}
 		}
-		
 	}
 
 }
